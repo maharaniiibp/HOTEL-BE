@@ -63,6 +63,7 @@ exports.login = async (request,response) => {
 //mendaptkan semua data dalam tabel
 exports.getAllUser = async (request, response) => {
   let user = await userModel.findAll();
+  // console.log(userID)
   return response.json({
     success: true,
     data: user,
@@ -108,7 +109,8 @@ exports.addUser = (request, response) => {
       password: md5(request.body.password),
       role: request.body.role
     };
-
+    console.log("nama user : "+newUser)
+    // console.log("email : "+newUser.email)
     userModel
       .create(newUser)
       .then((result) => {

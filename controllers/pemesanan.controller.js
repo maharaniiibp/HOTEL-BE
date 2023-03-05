@@ -228,9 +228,22 @@ exports.deletePemesanan = async (request, response) => {
 
 //mendapatkan semua data 
 exports.getAllPemesanan = async (request, response) => {
-  const result = await sequelize.query(
-    "SELECT pemesanans.id, pemesanans.nama_pemesanan,pemesanans.email_pemesanan,pemesanans.tgl_pemesanan,pemesanans.tgl_check_in,pemesanans.tgl_check_out,pemesanans.nama_tamu,pemesanans.jumlah_kamar,pemesanans.status_pemesanan, users.nama_user, tipe_kamars.nama_tipe_kamar, kamars.nomor_kamar FROM pemesanans JOIN tipe_kamars ON tipe_kamars.id = pemesanans._tipeKamarId JOIN users ON users.id=pemesanans.userId JOIN detail_pemesanans ON detail_pemesanans.id_pemesanan=pemesanans.id JOIN kamars ON kamars.id=detail_pemesanans.kamarId"
-  );
+  const result = await pemesananModel.findAll({
+    attributes:[
+      "id",
+      "nomor_pemesanan",
+      "nama_pemesanan",
+      "email_pemesanan",
+      "tgl_pemesanan",
+      "tgl_check_in",
+      "tgl_check_out",
+      "nama_tamu",
+      "jumlah_kamar",
+      "tipeKamarId",
+      "status_pemesanan",
+      "userId"
+    ]
+  })
 
   response.json({
     success: true,
@@ -242,9 +255,9 @@ exports.getAllPemesanan = async (request, response) => {
 //mendapatkan salah satu data 
 exports.find = async (request, response) => {
   let memberID = request.params.id;
-
+// console.log(memberID);
   const result = await sequelize.query(
-    `SELECT pemesanans.id, pemesanans.nama_pemesanan,pemesanans.email_pemesanan,pemesanans.tgl_pemesanan,pemesanans.tgl_check_in,pemesanans.tgl_check_out,pemesanans.nama_tamu,pemesanans.jumlah_kamar,pemesanans.status_pemesanan, users.nama_user, tipe_kamars.nama_tipe_kamar, kamars.nomor_kamar FROM pemesanans JOIN tipe_kamars ON tipe_kamars.id = pemesanans.tipeKamarId JOIN users ON users.id=pemesanans.userId JOIN detail_pemesanans ON detail_pemesanans.id_pemesanan=pemesanans.id JOIN kamars ON kamars.id=detail_pemesanans.kamarId WHERE pemesanans.id=${memberID}`
+    `SELECT pemesanans.id, pemesanans.nama_pemesanan,pemesanans.email_pemesanan,pemesanans.tgl_pemesanan,pemesanans.tgl_check_in,pemesanans.tgl_check_out,pemesanans.nama_tamu,pemesanans.jumlah_kamar,pemesanans.status_pemesanan, users.nama_user, tipe_kamars.nama_tipe_kamar, kamars.nomor_kamar FROM pemesanans JOIN tipe_kamars ON tipe_kamars.id = pemesanans.tipeKamarId JOIN users ON users.id=pemesanans.userId JOIN detail_pemesanans ON detail_pemesanans.pemesananId=pemesanans.id JOIN kamars ON kamars.id=detail_pemesanans.kamarId WHERE pemesanans.id=${memberID}`
   );
 
   return response.json({
