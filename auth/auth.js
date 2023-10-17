@@ -11,7 +11,7 @@ const authVerify = async (req,res,next) => {
         }
 
         let token = header.split(" ")[1];
-        const SECRET_KEY = "secretcode";
+        const SECRET_KEY = "secretcode"; 
 
         let decodedToken;
         try {

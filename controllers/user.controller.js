@@ -1,18 +1,21 @@
 const { request, response } = require("express");
 const express = require("express");
 const app = express();
-
 const md5=require("md5")
-
-
 const userModel = require(`../models/index`).user;
 const Op = require(`sequelize`).Op;
 const path = require(`path`);
 const fs = require(`fs`);
-const upload = require(`./upload.user`).single(`foto`);
+const upload = require(`./uploadUser`).single(`foto`);
+const Sequelize = require("sequelize");
+const sequelize = new Sequelize("wikuhotel", "root", "", {
+  host: "localhost",
+  dialect: "mysql",
+});
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 const jsonwebtoken = require("jsonwebtoken")
 const SECRET_KEY = "secretcode"
 
@@ -23,8 +26,7 @@ exports.login = async (request,response) => {
           email: request.body.email,
           password: md5(request.body.password),
       };
-
-      console.log(params)
+      console.log(params.email)
       const findUser = await userModel.findOne({ where: params});
       if (findUser == null) {
           return response.status(404).json({
@@ -54,7 +56,7 @@ exports.login = async (request,response) => {
   } catch (error){
       console.log(error);
       return response.status(500).json({
-          message: "Internal error (account not regis)",
+          message: "Internal error",
           err: error,
       });
   }
@@ -62,8 +64,9 @@ exports.login = async (request,response) => {
 
 //mendaptkan semua data dalam tabel
 exports.getAllUser = async (request, response) => {
-  let user = await userModel.findAll();
-  // console.log(userID)
+  let user = await userModel.findAll({
+    order: [['createdAt', 'DESC']]
+  });
   return response.json({
     success: true,
     data: user,
@@ -71,23 +74,32 @@ exports.getAllUser = async (request, response) => {
   });
 };
 
+// exports.countUser = async (request, response) => {
+//   let user = await sequelize.query("SELECT COUNT(*) FROM users");
+//   return response.json({
+//     success: true,
+//     jumlah_user: user[0],
+//     message: `All User have been loaded`,
+//   });
+// };
+
 //mendaptkan salah satu data dalam tabel (where clause)
 exports.findUser = async (request, response) => {
-  let nama = request.body.nama;
-  let email = request.body.email;
-  
-  let user = await userModel.findOne({
+  let keyword = request.body.keyword
+  let users = await userModel.findAll({
     where: {
       [Op.or]: [
-        { nama_user: { [Op.substring]: nama } },
-        { email: { [Op.substring]: email } }
+        { nama_user: { [Op.substring]: keyword } },
+        { email: { [Op.substring]: keyword } },
+        { role: { [Op.substring]: keyword } },
       ],
     },
+    order:[['createdAt', 'DESC']]
   });
   return response.json({
     success: true,
-    data: user,
-    message: `User have been loaded`,
+    data: users,
+    message: "berikut data yang anda minta yang mulia,"
   });
 };
 
@@ -109,8 +121,7 @@ exports.addUser = (request, response) => {
       password: md5(request.body.password),
       role: request.body.role
     };
-    console.log("nama user : "+newUser)
-    // console.log("email : "+newUser.email)
+
     userModel
       .create(newUser)
       .then((result) => {
@@ -140,12 +151,14 @@ exports.updateUser = (request, response) => {
 
     let dataUser = {
         nama_user: request.body.nama_user,
-        foto: request.file.filename,
+        // foto: request.file.filename,
         email: request.body.email,
         password: md5(request.body.password),
         role: request.body.role
     };
-
+    if (request.file && request.file.filename) {
+      dataUser.foto = request.file.filename;
+    }
     if (request.file) {
       const selectedUser = await userModel.findOne({
         where: { id: idUser },
@@ -186,7 +199,7 @@ exports.deleteUser = async (request, response) => {
 
   const oldFotoUser = user.foto;
 
-  const patchFoto = path.join(__dirname, `../foto`, oldFotoUser);
+  const patchFoto = path.join(__dirname, `../foto_user`, oldFotoUser);
 
   if (fs.existsSync(patchFoto)) {
     fs.unlink(patchFoto, (error) => console.log(error));

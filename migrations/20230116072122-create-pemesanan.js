@@ -1,7 +1,4 @@
 'use strict';
-
-const user = require('../models/user');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -13,12 +10,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nomor_pemesanan: {
-        type: Sequelize.INTEGER
-      },
-      nama_pemesanan: {
         type: Sequelize.STRING
       },
-      email_pemesanan: {
+      nama_pemesan: {
+        type: Sequelize.STRING
+      },
+      email_pemesan: {
         type: Sequelize.STRING
       },
       tgl_pemesanan: {
@@ -36,7 +33,7 @@ module.exports = {
       jumlah_kamar: {
         type: Sequelize.INTEGER
       },
-      id_tipe_kamar: {
+      tipeKamarId: {
         type: Sequelize.INTEGER,
         references: {
           model: "tipe_kamars",
@@ -44,9 +41,9 @@ module.exports = {
         },
       },
       status_pemesanan: {
-        type: Sequelize.ENUM('baru','check_in','checkout')
+        type: Sequelize.ENUM('baru','check_in','check_out')
       },
-      id_user: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: "users",

@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(
       null,
-      `foto-${Date.now()}${path.extname(file.originalname)}`
+      `kamar-${Date.now()}${path.extname(file.originalname)}`
     );
   },
 });

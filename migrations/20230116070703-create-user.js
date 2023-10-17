@@ -12,14 +12,14 @@ module.exports = {
       nama_user: {
         type: Sequelize.STRING
       },
-      foto: {
-        type: Sequelize.TEXT
-      },
       email: {
         type: Sequelize.STRING
       },
+      foto: {
+        type: Sequelize.STRING
+      },
       password: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
       },
       role: {
         type: Sequelize.ENUM('admin','resepsionis')

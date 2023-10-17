@@ -16,10 +16,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       deskripsi: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
       },
       foto: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

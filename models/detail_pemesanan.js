@@ -13,12 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.kamar)
       this.belongsTo(models.pemesanan)
-      
     }
   }
   detail_pemesanan.init({
     id_pemesanan: DataTypes.INTEGER,
-    id_kamar: DataTypes.INTEGER,
+    kamarId: DataTypes.INTEGER,
     tgl_akses: DataTypes.DATE,
     harga: DataTypes.INTEGER
   }, {

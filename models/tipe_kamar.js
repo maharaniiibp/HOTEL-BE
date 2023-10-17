@@ -12,15 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.pemesanan, {
-        foreignKey: 'id_tipe_kamar', as: 'pemesanan'
+        foreignKey: 'id', as: 'pemesanan'
       })
     }
   }
   tipe_kamar.init({
     nama_tipe_kamar: DataTypes.STRING,
     harga: DataTypes.INTEGER,
-    deskripsi: DataTypes.TEXT,
-    foto: DataTypes.TEXT
+    deskripsi: DataTypes.STRING,
+    foto: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'tipe_kamar',

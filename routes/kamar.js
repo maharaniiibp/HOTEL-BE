@@ -14,11 +14,11 @@ const roomController = require("../controllers/kamar.controller");
 // const upload = require('../controller/upload-cover');
 const auth = require(`../auth/auth`)
 
-app.get("/get", auth.authVerify,roomController.getAllKamar)
+app.get("/getAll", auth.authVerify,roomController.getAllKamar)
 app.post("/getAvailable", auth.authVerify,roomController.availableRoom)
 app.post("/find", auth.authVerify,roomController.findKamar)
-app.post("/", auth.authVerify,roomController.addKamar)
+app.post("/add", auth.authVerify,roomController.addKamar)
 app.delete("/:id",auth.authVerify, roomController.deleteKamar)
-app.put("/:id", auth.authVerify,roomController.updateKamar)
+app.put("/updateKamar/:id", auth.authVerify,roomController.updateKamar)
 
 module.exports=app
